@@ -15,8 +15,8 @@ class Sporcu:
 
 # Sporcu instance'leri oluşturdum
 sporcu1 = Sporcu("Ömer Faruk", "ÖZDEMİR", 21, "Futbol", 1234567)
-sporcu2 = Sporcu("Hamit", "Akdoğan", 20, "Basketbol", 8352341)
-sporcu3 = Sporcu("Mustafa", "Özoğlu", 28, "Voleybol", 6245632)
+sporcu2 = Sporcu("Hamit", "AKDOĞAN", 20, "Basketbol", 8352341)
+sporcu3 = Sporcu("Mustafa", "ÖZOĞLU", 28, "Voleybol", 6245632)
 
 # Sporcuları tanıtmım fonksiyonları
 sporcu1.sporcu_tanit()
