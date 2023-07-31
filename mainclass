@@ -1,0 +1,24 @@
+class Sporcu:
+    def __init__(sporcu, isim, soyisim, yas, spor_bransi, bonservis_bedeli):
+        sporcu.isim = isim
+        sporcu.soyisim = soyisim
+        sporcu.yas = yas
+        sporcu.spor_bransi = spor_bransi
+        sporcu.bonservis_bedeli = bonservis_bedeli
+
+    def sporcu_tanit(sporcu):
+        print(f"Sporcu Bilgileri:\n"
+              f"Adı Soyadı: {sporcu.isim} {sporcu.soyisim}\n"
+              f"Yaşı: {sporcu.yas}\n"
+              f"Spor Branşı: {sporcu.spor_bransi}\n"
+              f"Bonservis Bedeli: {sporcu.bonservis_bedeli} TL\n")
+
+# Sporcu instance'leri oluşturdum
+sporcu1 = Sporcu("Ömer Faruk", "ÖZDEMİR", 21, "Futbol", 1234567)
+sporcu2 = Sporcu("Hamit", "Akdoğan", 20, "Basketbol", 8352341)
+sporcu3 = Sporcu("Mustafa", "Özoğlu", 28, "Voleybol", 6245632)
+
+# Sporcuları tanıtmım fonksiyonları
+sporcu1.sporcu_tanit()
+sporcu2.sporcu_tanit()
+sporcu3.sporcu_tanit()
