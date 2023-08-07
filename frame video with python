@@ -1,0 +1,37 @@
+import cv2
+import os
+
+def split_video_into_frames(video_path, cikis_klasoru):
+    # Videoyu açmak için
+    vidcap = cv2.VideoCapture(video_path)
+
+    # çıkış klasörü oluşturmak için
+    if not os.path.exists(cikis_klasoru):
+        os.makedirs(cikis_klasoru)
+
+    count = 0
+
+    while True:
+        # sonraki kare
+        success, resim = vidcap.read()
+
+        if not success:
+            # Video bittiğinde kapattırdım
+            break
+
+        # frame kayıt
+        frame_name = f"frame_{count:04d}.jpg"
+        frame_path = os.path.join(cikis_klasoru, frame_name)
+        cv2.imwrite(frame_path, resim)  # Kareyi kaydet
+
+        count += 1
+
+    vidcap.release()
+    cv2.destroyAllWindows()
+    print(f"{count} kare alındı ve '{cikis_klasoru}' klasörüne kaydedildi.")
+
+if __name__ == "__main__":
+    input_video_path = "C:/Users/ozdem/Desktop/video/232.mp4"  # Video dosyasının yeri
+    output_frames_folder = "C:/Users/ozdem/Desktop/kareler"  # Karelerin kaydedileceği klasörün yer
+
+    split_video_into_frames(input_video_path, output_frames_folder)
