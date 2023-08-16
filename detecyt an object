@@ -1,0 +1,85 @@
+import cv2
+
+# Önceden eğitilmiş modelin yolu ve yapılandırma dosyası
+model_path = 'yol_til_model.cfg'
+weights_path = 'yol_til_model.weights'
+
+# Sınıf etiketlerinin bulunduğu dosyanın yolu
+labels_path = 'coco.names'
+
+net = cv2.dnn.readNet(weights_path, model_path)
+
+with open(labels_path, 'r') as f:
+    classes = f.read().strip().split('\n')
+
+def detect_objects(frame):
+    height, width = frame.shape[:2]
+
+    blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (416, 416), swapRB=True, crop=False)
+    net.setInput(blob)
+
+    layer_names = net.getUnconnectedOutLayersNames()
+    outputs = net.forward(layer_names)
+
+    detected_objects = []
+
+    for output in outputs:
+        for detection in output:
+            scores = detection[5:]
+            class_id = scores.argmax()
+            confidence = scores[class_id]
+
+            if confidence > 0.5: 
+                center_x = int(detection[0] * width)
+                center_y = int(detection[1] * height)
+                w = int(detection[2] * width)
+                h = int(detection[3] * height)
+
+                x = int(center_x - w / 2)
+                y = int(center_y - h / 2)
+
+                detected_objects.append({
+                    'class_id': class_id,
+                    'label': classes[class_id],
+                    'confidence': confidence,
+                    'box': (x, y, w, h)
+                })
+
+    return detected_objects
+
+image = cv2.imread('nesne_tespiti.jpg')
+detected_objects = detect_objects(image)
+
+for obj in detected_objects:
+    x, y, w, h = obj['box']
+    label = f'{obj["label"]} - {obj["confidence"]:.2f}'
+    cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    cv2.putText(image, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+cv2.imshow('Object Detection - Image', image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+video_path = 'video.mp4'
+cap = cv2.VideoCapture(video_path)
+
+while cap.isOpened():
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    detected_objects = detect_objects(frame)
+
+    for obj in detected_objects:
+        x, y, w, h = obj['box']
+        label = f'{obj["label"]} - {obj["confidence"]:.2f}'
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.putText(frame, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+    cv2.imshow('Object Detection - Video', frame)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
